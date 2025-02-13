@@ -1,7 +1,7 @@
 import { defineConfig } from 'astro/config'
 
-// import cloudflarePagesHeaders from 'astro-cloudflare-pages-headers';
-import cloudflarePagesHeaders from '../src/integration'
+import cloudflarePagesHeaders from 'astro-cloudflare-pages-headers'
+// import cloudflarePagesHeaders from '../src/integration'
 
 // https://astro.build/config
 export default defineConfig({
