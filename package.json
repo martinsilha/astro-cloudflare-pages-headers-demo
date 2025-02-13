@@ -9,6 +9,7 @@
     "astro": "astro"
   },
   "dependencies": {
-    "astro": "^5.2.6"
+    "astro": "^5.2.6",
+    "astro-cloudflare-pages-headers": "^1.2.0"
   }
 }

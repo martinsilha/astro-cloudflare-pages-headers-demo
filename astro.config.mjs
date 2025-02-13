@@ -1,6 +1,7 @@
-// @ts-check
 import { defineConfig } from 'astro/config'
-import { astroCloudflarePagesHeaders } from '../index'
+
+// import cloudflarePagesHeaders from 'astro-cloudflare-pages-headers';
+import cloudflarePagesHeaders from '../src/integration'
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,5 +18,5 @@ export default defineConfig({
       'permissions-policy': "geolocation=(self), microphone=(self), camera=(self)"
     },
   },
-  integrations: [astroCloudflarePagesHeaders()],
+  integrations: [cloudflarePagesHeaders()]
 })
