@@ -1,5 +1,12 @@
 ---
+import { headers } from '../../astro.config.mjs'
 
+const headersRequest = Array.from(Astro.request.headers.entries())
+  .map(([key, value]) => `${key}: ${value}`)
+  .join('\n')
+
+// Removed server-side headersResponse calculation
+export const prerender = false
 ---
 
 <html lang="en">
@@ -12,16 +19,96 @@
   </head>
   <body>
     <main>
-      <h1>Astro</h1>
-      <p>Welcome to Astro!</p>
+      <h1>astro-cloudflare-pages-headers</h1>
+      <hr />
+      <section>
+        <h2><code>astro.config.mjs</code> Headers</h2>
+        <pre>{JSON.stringify(headers, null, 2)}</pre>
+      </section>
+
+      <section>
+        <h2><code>Response</code> Headers</h2>
+        <pre id="client-response-headers">Loading response headers...</pre>
+      </section>
+
+      <!-- <section>
+        <h2>Request Headers</h2>
+        <pre>{headersRequest}</pre>
+      </section> -->
     </main>
+    <script>
+      window.addEventListener('load', async () => {
+        try {
+          const res = await fetch(window.location.href, { method: 'HEAD' })
+          let headersText = ''
+          res.headers.forEach((value, key) => {
+            headersText += `${key}: ${value}\n`
+          })
+          const clientResponseHeaders = document.getElementById(
+            'client-response-headers'
+          )
+          if (clientResponseHeaders) {
+            clientResponseHeaders.textContent = headersText
+          } else {
+            const clientResponseHeaders = document.getElementById(
+              'client-response-headers'
+            )
+            if (clientResponseHeaders) {
+              clientResponseHeaders.textContent = 'Error fetching headers'
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching headers:', error)
+        }
+      })
+    </script>
   </body>
 </html>
 
 <style>
+  body {
+    color-scheme: light dark;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    background-color: light-dark(whitesmoke, #2f2f2f);
+    color: light-dark(#181818, whitesmoke);
+  }
   main {
     place-items: center;
     height: 100vh;
     font-family: system-ui, sans-serif;
+  }
+
+  section {
+    width: clamp(300px, 80%, min(60ch, 94vw));
+    margin: 4rem auto;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 30ch;
+    overflow: auto; /* Enable scrolling if content exceeds max height */
+    border: 2px solid #ccc; /* Add a border for better visibility */
+    padding: 1rem; /* Add padding for aesthetics */
+    background-color: #181818;
+    color: lightsalmon;
+    margin: 0 auto;
+  }
+
+  code {
+    background-color: #ececec;
+    color: rgb(252, 38, 0);
+    padding: 5px;
+    border-radius: 5px;
+  }
+</style>
+
+<style is:global>
+  ::selection {
+    background-color: rgb(94, 14, 0);
+    color: whitesmoke;
   }
 </style>
